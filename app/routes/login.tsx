@@ -1,6 +1,10 @@
 import { Form, redirect } from "react-router";
 import type { Route } from "./+types/login";
 import { getUserId, setAuthCookie } from "../auth.server";
+import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
+import { Label } from "~/components/ui/label";
+import { Input } from "~/components/ui/input";
+import { Button } from "~/components/ui/button";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const user = getUserId(request);
@@ -26,40 +30,31 @@ export async function action({ request }: Route.ActionArgs) {
 export default function Login() {
   return (
     <main className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-6 border rounded-xl p-8 shadow-sm bg-white dark:bg-gray-900">
-        <h1 className="text-2xl font-semibold text-center">
-          Smart College Login
-        </h1>
-        <Form method="post" className="space-y-4">
-          <div className="space-y-1">
-            <label className="block text-sm font-medium">Email</label>
-            <input
-              name="email"
-              type="email"
-              required
-              className="w-full rounded-md border px-3 py-2 bg-transparent"
-            />
-          </div>
-          <div className="space-y-1">
-            <label className="block text-sm font-medium">Password</label>
-            <input
-              name="password"
-              type="password"
-              required
-              className="w-full rounded-md border px-3 py-2 bg-transparent"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
-          >
-            Login
-          </button>
-        </Form>
-        <p className="text-xs text-center text-gray-500">
-          Demo: any email/password works
-        </p>
-      </div>
+      <Card className="w-full max-w-md">
+        <CardHeader className="pb-0">
+          <CardTitle className="text-center text-2xl">
+            Smart College Login
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6 pt-2">
+          <Form method="post" className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" name="email" type="email" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" name="password" type="password" required />
+            </div>
+            <Button type="submit" className="w-full">
+              Login
+            </Button>
+          </Form>
+          <p className="text-xs text-center text-muted-foreground">
+            Demo: any email/password works
+          </p>
+        </CardContent>
+      </Card>
     </main>
   );
 }

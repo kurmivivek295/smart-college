@@ -9,6 +9,14 @@ import {
 import type { Route } from "./+types/dashboard";
 import { requireUser } from "../auth.server";
 import { semesters } from "../data";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "~/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 
 export async function loader({ request }: Route.LoaderArgs) {
   await requireUser(request);
@@ -24,8 +32,11 @@ export default function DashboardLayout({ loaderData }: Route.ComponentProps) {
   const semester = semesters.find((s) => s.id === semesterId)!;
 
   function onSemesterChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    params.set("semester", e.target.value);
-    setParams(params, { replace: true });
+    const newSem = e.target.value;
+    // Always navigate back to dashboard root to avoid stale subjectId from previous semester
+    params.set("semester", newSem);
+    // Use navigate to ensure pathname reset, then sync search params
+    navigate(`/dashboard?${params.toString()}`);
   }
 
   return (
@@ -44,24 +55,33 @@ export default function DashboardLayout({ loaderData }: Route.ComponentProps) {
               </option>
             ))}
           </select>
-          <div className="relative group">
-            <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center cursor-pointer">
-              SC
-            </div>
-            <div className="absolute right-0 mt-2 hidden group-hover:block bg-white dark:bg-gray-800 border rounded shadow-md w-40">
-              <Link
-                to="/dashboard"
-                className="block px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm"
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                aria-label="Open profile menu"
+                className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
               >
-                Profile
-              </Link>
-              <Form method="post" action="/logout">
-                <button className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm">
-                  Logout
-                </button>
-              </Form>
-            </div>
-          </div>
+                <Avatar>
+                  <AvatarFallback className="bg-blue-600 text-white text-xs">
+                    SC
+                  </AvatarFallback>
+                </Avatar>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-44">
+              <DropdownMenuItem asChild>
+                <Link to="/dashboard/profile">Profile</Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild variant="destructive">
+                <Form method="post" action="/logout">
+                  <button type="submit" className="w-full text-left">
+                    Logout
+                  </button>
+                </Form>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </nav>
       <div className="flex flex-1 overflow-hidden">

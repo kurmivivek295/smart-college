@@ -2,6 +2,8 @@ import type { Route } from "./+types/dashboard._index";
 import { useSearchParams } from "react-router";
 import { semesters } from "../data";
 import { useExerciseProgress, useLectureProgress } from "../progress";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Progress } from "~/components/ui/progress";
 
 export async function loader({}: Route.LoaderArgs) {
   return null;
@@ -27,22 +29,25 @@ export default function DashboardHome() {
             (c) => exercises[c.id]
           ).length;
           return (
-            <div
-              key={subj.id}
-              className="rounded-lg border p-4 space-y-2 bg-white dark:bg-gray-900"
-            >
-              <h2 className="font-medium text-sm">{subj.name}</h2>
-              <ProgressBar
-                label="Lectures"
-                done={lectureDone}
-                total={lectureTotal}
-              />
-              <ProgressBar
-                label="Exercises"
-                done={exerciseDone}
-                total={lectureTotal}
-              />
-            </div>
+            <Card key={subj.id} className="space-y-4 p-0">
+              <CardHeader className="pb-0">
+                <CardTitle className="text-sm font-medium">
+                  {subj.name}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Metric
+                  label="Lectures"
+                  done={lectureDone}
+                  total={lectureTotal}
+                />
+                <Metric
+                  label="Exercises"
+                  done={exerciseDone}
+                  total={lectureTotal}
+                />
+              </CardContent>
+            </Card>
           );
         })}
       </div>
@@ -50,7 +55,7 @@ export default function DashboardHome() {
   );
 }
 
-function ProgressBar({
+function Metric({
   label,
   done,
   total,
@@ -62,15 +67,13 @@ function ProgressBar({
   const pct = total === 0 ? 0 : Math.round((done / total) * 100);
   return (
     <div className="space-y-1">
-      <div className="flex justify-between text-xs">
+      <div className="flex justify-between text-xs font-medium">
         <span>{label}</span>
-        <span>
+        <span className="text-muted-foreground">
           {done}/{total} ({pct}%)
         </span>
       </div>
-      <div className="h-2 rounded bg-gray-200 dark:bg-gray-800 overflow-hidden">
-        <div style={{ width: pct + "%" }} className="h-full bg-blue-600" />
-      </div>
+      <Progress value={pct} />
     </div>
   );
 }

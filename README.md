@@ -14,6 +14,15 @@ A modern, production-ready template for building full-stack React applications u
 - 🎉 TailwindCSS for styling
 - 📖 [React Router docs](https://reactrouter.com/)
 
+- ## Screenshots
+### Login Page:
+<img width="1907" height="853" alt="image" src="https://github.com/user-attachments/assets/1e413006-87d9-425c-88ee-b2fbdac4dd03" />
+
+### Dashboard
+<img width="1916" height="883" alt="image" src="https://github.com/user-attachments/assets/4c4a114b-b947-423c-8cec-803a03673061" />
+
+
+
 ## Getting Started
 
 ### Installation
